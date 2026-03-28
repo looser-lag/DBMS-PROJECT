@@ -65,8 +65,8 @@ export default function GenericListView({ type = 'requests' }) {
                     {items.length > 0 ? (
                         items.map(item => (
                             isRequests
-                                ? <RequestCard key={item.id} request={item} actionLabel="Cancel Request" />
-                                : <AssignmentCard key={item.id} assignment={item} onStatusUpdate={handleStatusUpdate} />
+                                ? <RequestCard key={item.request_id || item.id} request={item} actionLabel="Cancel Request" />
+                                : <AssignmentCard key={item.assignment_id || item.id} assignment={item} onStatusUpdate={handleStatusUpdate} />
                         ))
                     ) : (
                         <div className="col-span-full py-20 text-center glass-panel rounded-2xl border-white/5">

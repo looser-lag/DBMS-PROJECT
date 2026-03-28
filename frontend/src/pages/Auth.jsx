@@ -8,6 +8,8 @@ export default function Auth({ isLogin = true }) {
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
+    const [department, setDepartment] = useState('');
+    const [year, setYear] = useState('1');
     const [role, setRole] = useState('Provider');
 
     const navigate = useNavigate();
@@ -20,7 +22,7 @@ export default function Auth({ isLogin = true }) {
             if (isLogin) {
                 await login(email, password);
             } else {
-                await register({ name, email, password, role, phone });
+                await register({ name, email, password, role, phone, department, year: parseInt(year) });
             }
             navigate('/dashboard');
         } catch (error) {
@@ -74,6 +76,33 @@ export default function Auth({ isLogin = true }) {
                                     onChange={(e) => setPhone(e.target.value)}
                                     required
                                 />
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-slate-300 mb-2">Department</label>
+                                    <input
+                                        type="text"
+                                        className="w-full bg-slate-800/60 border border-slate-600 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all placeholder-slate-500"
+                                        placeholder="Computer Science"
+                                        value={department}
+                                        onChange={(e) => setDepartment(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-slate-300 mb-2">Year</label>
+                                    <select
+                                        className="w-full bg-slate-800/60 border border-slate-600 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all text-white"
+                                        value={year}
+                                        onChange={(e) => setYear(e.target.value)}
+                                    >
+                                        <option value="1">1st Year</option>
+                                        <option value="2">2nd Year</option>
+                                        <option value="3">3rd Year</option>
+                                        <option value="4">4th Year</option>
+                                        <option value="5">5th Year</option>
+                                    </select>
+                                </div>
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-slate-300 mb-2">Primary Role</label>

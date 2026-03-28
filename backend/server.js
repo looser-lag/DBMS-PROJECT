@@ -399,15 +399,76 @@ app.post('/api/requests', async (req, res) => {
     }
 });
 
-// API Endpoint: Delete a skill
+// API Endpoint: Delete a user's skill (removes from USER_SKILL, not SKILL)
 app.delete('/api/skills/:id', async (req, res) => {
     const { id } = req.params;
+    const userId = req.query.userId;
     try {
-        await pool.query("DELETE FROM SKILL WHERE skill_id = $1", [id]);
-        res.json({ message: "Skill successfully deleted!" });
+        if (userId) {
+            await pool.query("DELETE FROM USER_SKILL WHERE user_id = $1 AND skill_id = $2", [userId, id]);
+        } else {
+            await pool.query("DELETE FROM USER_SKILL WHERE skill_id = $1", [id]);
+        }
+        res.json({ message: "Skill successfully removed!" });
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');
+    }
+});
+
+// API Endpoint: Submit feedback for a completed assignment
+app.post('/api/feedback', async (req, res) => {
+    const { assignmentId, rating, comments } = req.body;
+    try {
+        // Check if assignment exists and is completed
+        const assignment = await pool.query(
+            'SELECT * FROM SERVICE_ASSIGNMENT WHERE assignment_id = $1', [assignmentId]
+        );
+        if (assignment.rows.length === 0) {
+            return res.status(404).json({ msg: 'Assignment not found' });
+        }
+
+        // Check if feedback already exists
+        const existing = await pool.query(
+            'SELECT * FROM FEEDBACK WHERE assignment_id = $1', [assignmentId]
+        );
+        if (existing.rows.length > 0) {
+            return res.status(400).json({ msg: 'Feedback already submitted for this assignment' });
+        }
+
+        // Insert feedback
+        const result = await pool.query(
+            'INSERT INTO FEEDBACK (assignment_id, rating, comments) VALUES ($1, $2, $3) RETURNING *',
+            [assignmentId, rating, comments || '']
+        );
+
+        // Update provider's reputation score (average of all their feedback ratings)
+        const providerId = assignment.rows[0].provider_id;
+        await pool.query(
+            `UPDATE "USER" SET reputation_score = (
+                SELECT COALESCE(AVG(f.rating), 0)
+                FROM FEEDBACK f
+                JOIN SERVICE_ASSIGNMENT sa ON f.assignment_id = sa.assignment_id
+                WHERE sa.provider_id = $1
+            ) WHERE user_id = $1`,
+            [providerId]
+        );
+
+        res.status(201).json({ msg: 'Feedback submitted!', feedback: result.rows[0] });
+    } catch (err) {
+        console.error('Feedback Error:', err.stack);
+        res.status(500).json({ msg: 'Database error: ' + err.message });
+    }
+});
+
+// API Endpoint: Get all categories
+app.get('/api/categories', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM CATEGORY ORDER BY category_id ASC');
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: 'Database error fetching categories' });
     }
 });
 
@@ -462,6 +523,13 @@ app.post('/api/admin/sql', async (req, res) => {
     try {
         const cmd = query.trim().toUpperCase();
         const isSelect = cmd.startsWith('SELECT') || cmd.startsWith('WITH');
+
+        // Block destructive queries for safety
+        const blocked = ['DROP', 'TRUNCATE', 'ALTER'];
+        if (blocked.some(b => cmd.startsWith(b))) {
+            return res.status(403).json({ error: 'This query type is not allowed from the admin panel.' });
+        }
+
         const result = await pool.query(query);
         
         if (isSelect || (result.command === 'SELECT')) {

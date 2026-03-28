@@ -34,6 +34,10 @@ export default function BrowseSkills() {
             alert("Please log in to request a service.");
             return;
         }
+        if (user.user_id === skill.provider_id) {
+            alert("You can't request your own skill!");
+            return;
+        }
         setSelectedSkill(skill);
     };
 
@@ -55,9 +59,9 @@ export default function BrowseSkills() {
     };
 
     const handleDelete = async (id) => {
-        if (!window.confirm("Are you sure you want to delete this skill?")) return;
+        if (!window.confirm("Are you sure you want to remove this skill?")) return;
         try {
-            await skillsService.deleteSkill(id);
+            await skillsService.deleteSkill(id, user?.user_id);
             fetchSkills(); // Refresh list after deletion
         } catch (error) {
             console.error("Failed to delete skill", error);

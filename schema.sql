@@ -44,6 +44,7 @@ CREATE TABLE USER_SKILL (
     experience_level VARCHAR(50), -- e.g., 'Beginner', 'Intermediate', 'Expert'
     hourly_rate DECIMAL(10, 2) NOT NULL,
     availability_status BOOLEAN DEFAULT TRUE,
+    availability VARCHAR(100), -- e.g., 'Weekends', 'Everyday', 'Monday'
     PRIMARY KEY (user_id, skill_id),
     FOREIGN KEY (user_id) REFERENCES "USER"(user_id) ON DELETE CASCADE,
     FOREIGN KEY (skill_id) REFERENCES SKILL(skill_id) ON DELETE CASCADE

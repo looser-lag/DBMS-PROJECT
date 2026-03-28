@@ -24,8 +24,8 @@ export const skillsService = {
     addSkill: async (skillData) => {
         return api.post('/skills', skillData);
     },
-    deleteSkill: async (id) => {
-        return api.delete(`/skills/${id}`);
+    deleteSkill: async (id, userId) => {
+        return api.delete(`/skills/${id}${userId ? `?userId=${userId}` : ''}`);
     }
 };
 
@@ -56,6 +56,19 @@ export const assignmentsService = {
     },
     updateStatus: async (assignmentId, status) => {
         return api.put(`/assignments/${assignmentId}/status`, { status });
+    }
+};
+
+export const feedbackService = {
+    submit: async (feedbackData) => {
+        return api.post('/feedback', feedbackData);
+    }
+};
+
+export const categoriesService = {
+    getAll: async () => {
+        const res = await api.get('/categories');
+        return res.data;
     }
 };
 

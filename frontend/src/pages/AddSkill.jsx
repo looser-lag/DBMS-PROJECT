@@ -1,19 +1,34 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { skillsService } from '../services/api';
 import { PlusCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import api from '../services/api';
 
 export default function AddSkill() {
     const { user } = useAuth();
     const [skillName, setSkillName] = useState('');
-    const [categoryId, setCategoryId] = useState('1');
+    const [categoryId, setCategoryId] = useState('');
+    const [categories, setCategories] = useState([]);
     const [experienceLevel, setExperienceLevel] = useState('Beginner');
     const [hourlyRate, setHourlyRate] = useState('');
     const [availability, setAvailability] = useState('');
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await api.get('/categories');
+                setCategories(res.data);
+                if (res.data.length > 0) setCategoryId(String(res.data[0].category_id));
+            } catch (err) {
+                console.error("Failed to fetch categories", err);
+            }
+        };
+        fetchCategories();
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -67,10 +82,11 @@ export default function AddSkill() {
                                 value={categoryId}
                                 onChange={(e) => setCategoryId(e.target.value)}
                             >
-                                <option value="1">Programming</option>
-                                <option value="2">Design</option>
-                                <option value="3">Academics</option>
-                                <option value="4">Language</option>
+                                {categories.map(cat => (
+                                    <option key={cat.category_id} value={cat.category_id}>
+                                        {cat.category_name}
+                                    </option>
+                                ))}
                             </select>
                         </div>
 
@@ -91,12 +107,14 @@ export default function AddSkill() {
 
                     <div className="grid grid-cols-2 gap-6">
                         <div>
-                            <label className="block text-sm font-medium text-slate-300 mb-2">Rate/Compensation</label>
+                            <label className="block text-sm font-medium text-slate-300 mb-2">Hourly Rate (₹)</label>
                             <input
-                                type="text"
+                                type="number"
+                                min="0"
+                                step="0.01"
                                 required
                                 className="w-full bg-slate-800/60 border border-slate-600 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 outline-none text-white"
-                                placeholder="e.g. Free, $15/hr, Skill Trade"
+                                placeholder="e.g. 15.00"
                                 value={hourlyRate}
                                 onChange={(e) => setHourlyRate(e.target.value)}
                             />
@@ -108,7 +126,7 @@ export default function AddSkill() {
                                 type="text"
                                 required
                                 className="w-full bg-slate-800/60 border border-slate-600 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 outline-none text-white"
-                                placeholder="e.g. Weekends, Tue/Thu Evenings"
+                                placeholder="e.g. Weekends, Everyday"
                                 value={availability}
                                 onChange={(e) => setAvailability(e.target.value)}
                             />
