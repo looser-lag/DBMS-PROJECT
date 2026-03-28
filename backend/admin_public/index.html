@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PostgreSQL Admin Schema (Campus Skill Exchange)</title>
+    <style>
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #0f172a; color: #f8fafc; padding: 20px; margin: 0; display: flex; height: 100vh; box-sizing: border-box; }
+        .sidebar { width: 250px; background-color: #1e293b; padding: 20px; border-radius: 12px; margin-right: 20px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5); display: flex; flex-direction: column; }
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        
+        h1, h2, h3 { margin-top: 0; }
+        h1 { color: #38bdf8; font-size: 22px; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #334155; }
+        h3 { color: #e2e8f0; font-size: 16px; margin-bottom: 10px; }
+        
+        a.back { color: #94a3b8; text-decoration: none; font-size: 14px; margin-bottom: 20px; display: inline-block; transition: color 0.2s; }
+        a.back:hover { color: #38bdf8; }
+        
+        .table-list { list-style: none; padding: 0; margin: 0; flex: 1; overflow-y: auto; }
+        .table-list li { padding: 10px 15px; margin-bottom: 5px; background: #0f172a; border-radius: 6px; cursor: pointer; color: #94a3b8; font-weight: 500; font-size: 14px; border: 1px solid #334155; transition: all 0.2s; }
+        .table-list li:hover { border-color: #38bdf8; color: #f8fafc; background: #1e293b; }
+        .table-list li.active { background: #38bdf8; color: #0f172a; border-color: #38bdf8; font-weight: 600; }
+        
+        .panel { background: #1e293b; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #334155; }
+        .panel.flex-grow { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+        
+        textarea { width: 100%; height: 70px; padding: 12px; background: #0f172a; color: #10b981; border: 1px solid #475569; border-radius: 8px; font-family: 'Fira Code', 'Courier New', Courier, monospace; font-size: 14px; box-sizing: border-box; resize: vertical; margin-bottom: 15px; outline: none; }
+        textarea:focus { border-color: #38bdf8; box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); }
+        
+        button { background-color: #38bdf8; color: #0f172a; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; transition: background-color 0.2s; }
+        button:hover { background-color: #7dd3fc; }
+        button.refresh-btn { font-size: 12px; padding: 5px 10px; background-color: #475569; color: #f8fafc; }
+        button.refresh-btn:hover { background-color: #64748b; }
+        
+        .table-wrapper { flex: 1; overflow: auto; background: #0f172a; border-radius: 8px; margin-top: 10px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 16px; border-bottom: 1px solid #334155; text-align: left; font-size: 13px; white-space: nowrap; }
+        th { background: #1e293b; color: #94a3b8; font-weight: 600; font-size: 11px; letter-spacing: 0.05em; position: sticky; top: 0; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #334155; }
+        td { color: #cbd5e1; }
+        
+        .header-controls { display: flex; justify-content: space-between; align-items: center; }
+        #sqlMessage { margin-top: 10px; font-weight: 500; font-size: 13px; }
+        
+        .sync-indicator { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #94a3b8; }
+        .dot { width: 8px; height: 8px; background-color: #10b981; border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+    </style>
+</head>
+<body>
+    
+    <div class="sidebar">
+        <h1>Postgres DB</h1>
+        <a href="http://localhost:5173" class="back">← Exit Admin</a>
+        <h3>Tables</h3>
+        <ul class="table-list" id="tableList">
+            <li style="color:#94a3b8; border: none; background: transparent;">Loading tables...</li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="panel">
+            <h3>Custom PG SQL Query</h3>
+            <textarea id="sqlQuery" placeholder="SELECT * FROM table_name..."></textarea>
+            <button onclick="executeSQL()">Execute Query</button>
+            <div id="sqlMessage"></div>
+        </div>
+
+        <div class="panel flex-grow">
+            <div class="header-controls">
+                <h3>
+                    <span style="color:#f8fafc;">Viewing Table:</span> 
+                    <span id="currentTableLabel" style="color:#38bdf8;">Select a table...</span>
+                </h3>
+                <div class="sync-indicator">
+                    <span class="dot"></span> Live Sync
+                    <button class="refresh-btn" onclick="loadTableData()" style="margin-left: 10px;">Refresh</button>
+                </div>
+            </div>
+            <div class="table-wrapper">
+                <div id="tableContainer" style="padding: 20px; color: #94a3b8;">Choose a table from the sidebar to view its contents, or run a custom Postgres query above.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTable = null;
+        let isCustomQuery = false;
+
+        async function fetchTables() {
+            try {
+                const res = await fetch('/api/admin/tables');
+                const tables = await res.json();
+                
+                const list = document.getElementById('tableList');
+                list.innerHTML = '';
+                
+                if (tables.length === 0) {
+                    list.innerHTML = '<li>No tables found</li>';
+                    return;
+                }
+                
+                tables.forEach(t => {
+                    const li = document.createElement('li');
+                    li.textContent = t;
+                    li.onclick = () => selectTable(t, li);
+                    if (currentTable === t) li.classList.add('active');
+                    list.appendChild(li);
+                });
+                
+                if (!currentTable && !isCustomQuery && tables.length > 0) {
+                    selectTable(tables[0], list.firstChild);
+                }
+            } catch (err) {
+                console.error("Failed to fetch tables", err);
+            }
+        }
+
+        function selectTable(tableName, el) {
+            currentTable = tableName;
+            isCustomQuery = false;
+            document.querySelectorAll('.table-list li').forEach(li => li.classList.remove('active'));
+            if(el) el.classList.add('active');
+            
+            document.getElementById('currentTableLabel').textContent = tableName;
+            loadTableData();
+        }
+
+        async function loadTableData() {
+            if (!currentTable) return;
+            try {
+                const response = await fetch(`/api/admin/table/${currentTable}`);
+                const data = await response.json();
+                if (response.ok) {
+                    renderTable(data, 'tableContainer');
+                } else {
+                    document.getElementById('tableContainer').innerHTML = `<p style="color:#ef4444;">Error: ${data.error}</p>`;
+                }
+            } catch (err) {
+                document.getElementById('tableContainer').innerHTML = `<p style="color:#ef4444;">Error loading records.</p>`;
+            }
+        }
+
+        async function executeSQL() {
+            const query = document.getElementById('sqlQuery').value;
+            const msgDiv = document.getElementById('sqlMessage');
+            if (!query) {
+                msgDiv.innerHTML = '<span style="color:#ef4444;">Please provide a SQL query.</span>';
+                return;
+            }
+            
+            msgDiv.innerHTML = '<span style="color:#94a3b8;">Executing...</span>';
+            try {
+                const response = await fetch('/api/admin/sql', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query })
+                });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    if (data.type === 'select') {
+                        msgDiv.innerHTML = `<span style="color:#38bdf8;">Success: Query returned ${data.data.length} rows.</span>`;
+                        document.getElementById('currentTableLabel').textContent = 'Custom Query Result';
+                        currentTable = null;
+                        isCustomQuery = true;
+                        document.querySelectorAll('.table-list li').forEach(li => li.classList.remove('active'));
+                        renderTable(data.data, 'tableContainer');
+                    } else {
+                        msgDiv.innerHTML = `<span style="color:#10b981;">✅ ${data.message} Affected rows: ${data.changes}.</span>`;
+                        fetchTables();
+                        if(currentTable) loadTableData();
+                    }
+                } else {
+                    msgDiv.innerHTML = `<span style="color:#ef4444;">❌ SQL Error: ${data.error}</span>`;
+                }
+            } catch (err) {
+                msgDiv.innerHTML = `<span style="color:#ef4444;">❌ Network Error executing query.</span>`;
+            }
+        }
+
+        function renderTable(data, containerId) {
+            const container = document.getElementById(containerId);
+            if (!data || data.length === 0) {
+                container.innerHTML = '<p style="padding: 20px; color:#94a3b8;">No records found.</p>';
+                return;
+            }
+            
+            const keys = Object.keys(data[0]);
+            let html = '<table><thead><tr>';
+            keys.forEach(k => html += `<th>${k}</th>`);
+            html += '</tr></thead><tbody>';
+            
+            data.forEach(row => {
+                html += '<tr>';
+                keys.forEach(k => {
+                    html += `<td>${row[k] !== null ? row[k] : 'NULL'}</td>`;
+                });
+                html += '</tr>';
+            });
+            html += '</tbody></table>';
+            
+            container.innerHTML = html;
+        }
+
+        fetchTables();
+        setInterval(() => {
+            if (currentTable) loadTableData();
+            fetchTables();
+        }, 5000);
+    </script>
+</body>
+</html>
