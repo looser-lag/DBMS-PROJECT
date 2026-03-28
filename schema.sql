@@ -8,7 +8,8 @@ CREATE TABLE "USER" (
     email VARCHAR(255) UNIQUE NOT NULL,
     department VARCHAR(100) NOT NULL,
     year INT NOT NULL,
-    reputation_score DECIMAL(3, 2) DEFAULT 0.00
+    reputation_score DECIMAL(3, 2) DEFAULT 0.00,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 2. USER_PHONE Entity
@@ -32,6 +33,7 @@ CREATE TABLE SKILL (
     skill_name VARCHAR(100) NOT NULL,
     category_id INT NOT NULL,
     description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (category_id) REFERENCES CATEGORY(category_id) ON DELETE CASCADE
 );
 
@@ -55,6 +57,7 @@ CREATE TABLE SERVICE_REQUEST (
     description TEXT NOT NULL,
     preferred_date DATE NOT NULL,
     status VARCHAR(50) DEFAULT 'Pending', -- 'Pending', 'Assigned', 'Completed', 'Cancelled'
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (requester_id) REFERENCES "USER"(user_id) ON DELETE CASCADE,
     FOREIGN KEY (skill_id) REFERENCES SKILL(skill_id) ON DELETE CASCADE
 );
