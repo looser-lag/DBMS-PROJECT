@@ -55,34 +55,34 @@ INSERT INTO SKILL (skill_name, category_id, description) VALUES
 ON CONFLICT (skill_name, category_id) DO NOTHING;
 
 -- 3. Insert Users (All mock users have password 'password123')
-INSERT INTO "USER" (name, email, password_hash, department, year, reputation_score, role) VALUES
-('Alice Smith', 'alice.smith@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Computer Science', 3, 4.8, 'Provider'),
-('Bob Johnson', 'bob.johnson@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Engineering', 2, 4.5, 'Provider'),
-('Charlie Brown', 'charlie.b@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Design', 4, 4.9, 'Provider'),
-('Diana Prince', 'diana.p@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Business', 1, 0.0, 'Receiver'),
-('Evan Wright', 'evan.w@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Computer Science', 4, 5.0, 'Provider'),
-('Fiona Gallagher', 'fiona.g@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Biology', 2, 4.2, 'Provider'),
-('George Miller', 'george.m@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'History', 3, 3.8, 'Receiver'),
-('Hannah Abbott', 'hannah.a@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Chemistry', 1, 0.0, 'Receiver'),
-('Ian Chesterton', 'ian.c@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Physics', 4, 4.7, 'Provider'),
-('Jane Doe', 'jane.doe@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Mathematics', 2, 4.1, 'Receiver'),
-('Kevin Hart', 'kevin.h@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Theater', 3, 4.6, 'Provider'),
-('Luna Lovegood', 'luna.l@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Art', 2, 4.4, 'Provider'),
-('Michael Scott', 'michael.s@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Business', 4, 3.5, 'Receiver'),
-('Natalie Portman', 'natalie.p@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Psychology', 1, 0.0, 'Receiver'),
-('Oliver Wood', 'oliver.w@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Sports Science', 3, 4.9, 'Provider'),
-('Penelope Clearwater', 'penelope.c@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'English', 4, 4.8, 'Both'),
-('Quincy Adams', 'quincy.a@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Political Science', 2, 4.0, 'Receiver'),
-('Rachel Green', 'rachel.g@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Fashion', 3, 4.2, 'Receiver'),
-('Samwise Gamgee', 'samwise.g@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Agriculture', 1, 0.0, 'Both'),
-('Tina Goldstein', 'tina.g@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Law', 4, 4.9, 'Provider'),
-('Ulysses Grant', 'ulysses.g@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'History', 2, 3.9, 'Receiver'),
-('Victoria Beckham', 'victoria.b@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Music', 3, 4.5, 'Provider'),
-('Wade Wilson', 'wade.w@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Communications', 4, 4.1, 'Receiver'),
-('Xena Warrior', 'xena.w@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Physical Education', 2, 4.7, 'Both'),
-('Yusuf Amir', 'yusuf.a@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Economics', 1, 0.0, 'Receiver'),
-('Nithin', 'nithin@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Computer Science', 2, 4.5, 'Provider')
-ON CONFLICT (email) DO NOTHING;
+INSERT INTO "USER" (user_id, name, email, password_hash, department, year, reputation_score, role) VALUES
+(1, 'Alice Smith', 'alice.smith@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Computer Science', 3, 4.8, 'Provider'),
+(2, 'Bob Johnson', 'bob.johnson@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Engineering', 2, 4.5, 'Provider'),
+(3, 'Charlie Brown', 'charlie.b@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Design', 4, 4.9, 'Provider'),
+(4, 'Diana Prince', 'diana.p@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Business', 1, 0.0, 'Receiver'),
+(5, 'Evan Wright', 'evan.w@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Computer Science', 4, 5.0, 'Provider'),
+(6, 'Fiona Gallagher', 'fiona.g@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Biology', 2, 4.2, 'Provider'),
+(7, 'George Miller', 'george.m@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'History', 3, 3.8, 'Receiver'),
+(8, 'Hannah Abbott', 'hannah.a@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Chemistry', 1, 0.0, 'Receiver'),
+(9, 'Ian Chesterton', 'ian.c@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Physics', 4, 4.7, 'Provider'),
+(10, 'Jane Doe', 'jane.doe@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Mathematics', 2, 4.1, 'Receiver'),
+(11, 'Kevin Hart', 'kevin.h@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Theater', 3, 4.6, 'Provider'),
+(12, 'Luna Lovegood', 'luna.l@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Art', 2, 4.4, 'Provider'),
+(13, 'Michael Scott', 'michael.s@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Business', 4, 3.5, 'Receiver'),
+(14, 'Natalie Portman', 'natalie.p@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Psychology', 1, 0.0, 'Receiver'),
+(15, 'Oliver Wood', 'oliver.w@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Sports Science', 3, 4.9, 'Provider'),
+(16, 'Penelope Clearwater', 'penelope.c@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'English', 4, 4.8, 'Both'),
+(17, 'Quincy Adams', 'quincy.a@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Political Science', 2, 4.0, 'Receiver'),
+(18, 'Rachel Green', 'rachel.g@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Fashion', 3, 4.2, 'Receiver'),
+(19, 'Samwise Gamgee', 'samwise.g@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Agriculture', 1, 0.0, 'Both'),
+(20, 'Tina Goldstein', 'tina.g@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Law', 4, 4.9, 'Provider'),
+(21, 'Ulysses Grant', 'ulysses.g@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'History', 2, 3.9, 'Receiver'),
+(22, 'Victoria Beckham', 'victoria.b@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Music', 3, 4.5, 'Provider'),
+(23, 'Wade Wilson', 'wade.w@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Communications', 4, 4.1, 'Receiver'),
+(24, 'Xena Warrior', 'xena.w@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Physical Education', 2, 4.7, 'Both'),
+(25, 'Yusuf Amir', 'yusuf.a@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Economics', 1, 0.0, 'Receiver'),
+(26, 'Nithin', 'nithin@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Computer Science', 2, 4.5, 'Provider')
+ON CONFLICT (email) DO UPDATE SET name = EXCLUDED.name, user_id = EXCLUDED.user_id;
 
 -- 4. Insert User Phones
 INSERT INTO USER_PHONE (user_id, phone_number) VALUES
@@ -91,7 +91,7 @@ INSERT INTO USER_PHONE (user_id, phone_number) VALUES
 (10, '+91 70220 98765'),(11, '+91 63621 54321'),(12, '+91 94480 12345'),(13, '+91 96112 34567'),(14, '+91 81234 56789'),
 (15, '+91 99723 12345'),(16, '+91 99801 23456'),(17, '+91 98800 12345'),(18, '+91 97312 34567'),(19, '+91 94490 87654'),
 (20, '+91 95350 12345'),(21, '+91 96200 54321'),(22, '+91 91410 12345'),(23, '+91 97400 98765'),(24, '+91 90080 12345'),
-(25, '+91 88840 54321'),(22, '+91 99887 12345')
+(25, '+91 88840 54321'),(26, '+91 99887 12345')
 ON CONFLICT (user_id, phone_number) DO NOTHING;
 
 -- 5. Insert User Skills (Providers)
@@ -118,7 +118,7 @@ INSERT INTO USER_SKILL (user_id, skill_id, experience_level, hourly_rate, availa
 (22, 29, 'Expert', 30.00, TRUE, 'Saturdays'),
 (24, 32, 'Expert', 15.00, TRUE, 'Tuesdays and Thursdays'),
 (25, 33, 'Intermediate', 20.00, TRUE, 'Weekends'),
-(22, 28, 'Expert', 15.00, TRUE, 'Everyday')
+(26, 28, 'Expert', 15.00, TRUE, 'Everyday')
 ON CONFLICT (user_id, skill_id) DO NOTHING;
 
 -- 6. Insert Service Requests
@@ -159,3 +159,10 @@ INSERT INTO FEEDBACK (assignment_id, rating, comments, feedback_date) VALUES
 (6, 5, 'Luna was so quick with the photoshop request, looks awesome!', CURRENT_TIMESTAMP - INTERVAL '5 hours'),
 (8, 5, 'Evan wrote a perfect script that saved me hours of manual work.', CURRENT_TIMESTAMP - INTERVAL '1 day')
 ON CONFLICT (assignment_id) DO NOTHING;
+
+-- 9. Reset Sequencies
+SELECT setval('"USER_user_id_seq"', (SELECT max(user_id) FROM "USER"));
+SELECT setval('CATEGORY_category_id_seq', (SELECT max(category_id) FROM CATEGORY));
+SELECT setval('SKILL_skill_id_seq', (SELECT max(skill_id) FROM SKILL));
+SELECT setval('SERVICE_REQUEST_request_id_seq', (SELECT max(request_id) FROM SERVICE_REQUEST));
+SELECT setval('SERVICE_ASSIGNMENT_assignment_id_seq', (SELECT max(assignment_id) FROM SERVICE_ASSIGNMENT));
