@@ -2,7 +2,84 @@
 
 A full-stack peer-to-peer platform where university students can **offer**, **discover**, and **request** skills from fellow students — from coding help and tutoring to design work and resume reviews.
 
-> Built as a **DBMS course project** demonstrating relational database design, normalization, and full-stack integration.
+---
+
+## 🚀 Quick Start & Setup Guide
+
+### 🛠️ Prerequisites & Downloads
+To run this project, you need the following installed on your system:
+
+| Tool | Purpose | Download Link |
+|---|---|---|
+| **Node.js (v18+)** | Backend/Frontend Runtime | [Download Node.js](https://nodejs.org/) |
+| **PostgreSQL (v14+)** | Database System | [Download PostgreSQL](https://www.postgresql.org/download/) |
+| **Git** | Version Control | [Download Git](https://git-scm.com/) |
+
+### 🌍 Languages & Technologies
+- **Frontend**: JavaScript (React 19, Vite 7), HTML5, CSS3 (TailwindCSS)
+- **Backend**: JavaScript (Node.js, Express 5)
+- **Database**: SQL (PostgreSQL)
+
+---
+
+### 📥 1. Clone the Repository
+Open your terminal and run:
+```bash
+git clone https://github.com/looser-lag/DBMS-PROJECT.git
+cd DBMS-PROJECT
+```
+
+### 🗄️ 2. Set Up the Database
+1. Open your PostgreSQL terminal (`psql`):
+   ```bash
+   psql -U postgres
+   ```
+2. Run these commands inside the `psql` shell:
+   ```sql
+   CREATE DATABASE campus_skill_exchange;
+   \c campus_skill_exchange
+   -- (Optional) Exit psql and run:
+   -- psql -U postgres -d campus_skill_exchange -f schema.sql
+   -- psql -U postgres -d campus_skill_exchange -f seed.sql
+   ```
+3. Alternatively, use the included `schema.sql` and `seed.sql` files directly from your terminal:
+   ```bash
+   psql -U postgres -d campus_skill_exchange -f schema.sql
+   psql -U postgres -d campus_skill_exchange -f seed.sql
+   ```
+
+### ⚙️ 3. Configure Environment
+Go to the `backend/` folder and ensure there is a `.env` file with these values:
+```env
+DB_USER=postgres
+DB_PASSWORD=your_password  # Update this with your actual DB password!
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=campus_skill_exchange
+PORT=3000
+```
+
+### 🏃 4. Install & Run
+You need to open **two** terminal windows:
+
+#### **Terminal 1: Backend**
+```bash
+cd backend
+npm install
+node server.js
+```
+
+#### **Terminal 2: Frontend**
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+### 🔗 5. Access the Platform
+- **Frontend**: [http://localhost:5173](http://localhost:5173)
+- **Backend API**: [http://localhost:3000](http://localhost:3000)
+- **Admin Panel**: [http://localhost:3000/admin](http://localhost:3000/admin)
 
 ---
 
@@ -147,67 +224,6 @@ All tables are in **3NF / BCNF**:
 
 ---
 
-## 🚀 Getting Started
-
-### Prerequisites
-
-- [Node.js](https://nodejs.org/) (v18+)
-- [PostgreSQL](https://www.postgresql.org/) (v14+)
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/looser-lag/DBMS-PROJECT.git
-cd DBMS-PROJECT
-```
-
-### 2. Set Up the Database
-
-```bash
-# Connect to PostgreSQL and create the database
-psql -U postgres
-CREATE DATABASE campus_skill_exchange;
-\q
-
-# Run the schema and seed files
-psql -U postgres -d campus_skill_exchange -f schema.sql
-psql -U postgres -d campus_skill_exchange -f seed.sql
-```
-
-### 3. Configure Environment Variables
-
-Create a `.env` file in the `backend/` directory:
-
-```env
-DB_USER=postgres
-DB_PASSWORD=your_password
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=campus_skill_exchange
-PORT=3000
-```
-
-### 4. Install Dependencies & Run
-
-```bash
-# Backend
-cd backend
-npm install
-node server.js
-
-# Frontend (in a new terminal)
-cd frontend
-npm install
-npm run dev
-```
-
-### 5. Access the App
-
-| Service | URL |
-|---|---|
-| Frontend | [http://localhost:5173](http://localhost:5173) |
-| Backend API | [http://localhost:3000](http://localhost:3000) |
-| Admin Dashboard | [http://localhost:3000/admin](http://localhost:3000/admin) |
 
 ---
 
