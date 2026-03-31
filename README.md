@@ -132,6 +132,7 @@ npm run dev
 - **Feedback System** — Rate and review completed services (1–5 stars)
 - **Admin Panel** — View all database tables and run raw SQL queries at `/admin`
 - **Real-time Stats** — Platform-wide statistics (active students, skills available, tasks completed)
+- **Data Warehouse Analytics** — Advanced business intelligence metrics and interactive charts for platform administrators
 
 ---
 

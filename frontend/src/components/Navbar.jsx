@@ -42,8 +42,13 @@ export default function Navbar() {
                                 <div className="flex items-center gap-6">
                                     <Link to="/dashboard" className="text-slate-300 hover:text-white transition-colors">Dashboard</Link>
                                     <Link to="/requests" className="text-slate-300 hover:text-white transition-colors">My Requests</Link>
-                                    {(user.role === 'Provider' || user.role === 'Both') && (
+                                    {(user.role === 'Provider' || user.role === 'Both' || user.role === 'Admin') && (
                                         <Link to="/assignments" className="text-slate-300 hover:text-white transition-colors">My Assignments</Link>
+                                    )}
+                                    {user.role === 'Admin' && (
+                                        <Link to="/analytics" className="text-pink-400 font-semibold hover:text-pink-300 transition-colors flex items-center gap-1">
+                                            📊 Analytics (DW)
+                                        </Link>
                                     )}
                                 </div>
                             )}
@@ -90,8 +95,11 @@ export default function Navbar() {
                         <>
                             <Link to="/dashboard" className="text-slate-300 px-2 py-1" onClick={() => setIsOpen(false)}>Dashboard</Link>
                             <Link to="/requests" className="text-slate-300 px-2 py-1" onClick={() => setIsOpen(false)}>My Requests</Link>
-                            {(user.role === 'Provider' || user.role === 'Both') && (
+                            {(user.role === 'Provider' || user.role === 'Both' || user.role === 'Admin') && (
                                 <Link to="/assignments" className="text-slate-300 px-2 py-1" onClick={() => setIsOpen(false)}>My Assignments</Link>
+                            )}
+                            {user.role === 'Admin' && (
+                                <Link to="/analytics" className="text-pink-400 font-semibold px-2 py-1" onClick={() => setIsOpen(false)}>📊 Analytics (DW)</Link>
                             )}
                             <Link to="/profile" className="text-indigo-400 px-2 py-1 font-medium" onClick={() => setIsOpen(false)}>Profile ({capitalizeName(user.name)})</Link>
                             <button onClick={() => { handleLogout(); setIsOpen(false); }} className="text-left text-pink-400 px-2 py-1">Logout</button>

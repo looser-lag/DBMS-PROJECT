@@ -81,8 +81,9 @@ INSERT INTO "USER" (user_id, name, email, password_hash, department, year, reput
 (23, 'Wade Wilson', 'wade.w@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Communications', 4, 4.1, 'Receiver'),
 (24, 'Xena Warrior', 'xena.w@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Physical Education', 2, 4.7, 'Both'),
 (25, 'Yusuf Amir', 'yusuf.a@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Economics', 1, 0.0, 'Receiver'),
-(26, 'Nithin', 'nithin@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Computer Science', 2, 4.5, 'Provider')
-ON CONFLICT (email) DO UPDATE SET name = EXCLUDED.name, user_id = EXCLUDED.user_id;
+(26, 'Nithin', 'nithin@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Computer Science', 2, 4.5, 'Provider'),
+(27, 'Site Admin', 'admin@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Administration', 5, 5.0, 'Admin')
+ON CONFLICT (email) DO UPDATE SET name = EXCLUDED.name, user_id = EXCLUDED.user_id, role = EXCLUDED.role;
 
 -- 4. Insert User Phones
 INSERT INTO USER_PHONE (user_id, phone_number) VALUES

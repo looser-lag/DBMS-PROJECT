@@ -10,6 +10,7 @@ import Profile from './pages/Profile';
 import AddSkill from './pages/AddSkill';
 import CreateRequest from './pages/CreateRequest';
 import GenericListView from './pages/GenericListView';
+import Analytics from './pages/Analytics';
 
 // Stub pages for routes that aren't fully implemented yet
 const PlaceholderPage = ({ title }) => (
@@ -51,8 +52,8 @@ function App() {
               <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
               <Route path="/add-skill" element={<ProtectedRoute allowedRoles={['Provider', 'Both']}><AddSkill /></ProtectedRoute>} />
               <Route path="/requests" element={<ProtectedRoute><GenericListView type="requests" /></ProtectedRoute>} />
-              <Route path="/assignments" element={<ProtectedRoute allowedRoles={['Provider', 'Both']}><GenericListView type="assignments" /></ProtectedRoute>} />
-              <Route path="/analytics" element={<ProtectedRoute><PlaceholderPage title="Analytics" /></ProtectedRoute>} />
+              <Route path="/assignments" element={<ProtectedRoute allowedRoles={['Provider', 'Both', 'Admin']}><GenericListView type="assignments" /></ProtectedRoute>} />
+              <Route path="/analytics" element={<ProtectedRoute allowedRoles={['Admin']}><Analytics /></ProtectedRoute>} />
 
               {/* Catch-all */}
               <Route path="*" element={<PlaceholderPage title="404 Not Found" />} />

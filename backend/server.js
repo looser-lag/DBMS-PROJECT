@@ -552,6 +552,45 @@ app.post('/api/admin/sql', async (req, res) => {
     }
 });
 
+// ==========================================
+// BUSINESS INTELLIGENCE (DATA WAREHOUSE) ENDPOINTS
+// ==========================================
+app.get('/api/bi/departments', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM BI_Department_Performance');
+        res.json(result.rows);
+    } catch (err) {
+        res.status(500).json({ msg: 'DW Error: ' + err.message });
+    }
+});
+
+app.get('/api/bi/categories', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM BI_Popular_Categories');
+        res.json(result.rows);
+    } catch (err) {
+        res.status(500).json({ msg: 'DW Error: ' + err.message });
+    }
+});
+
+app.get('/api/bi/activity', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM BI_Activity_By_Day_Type');
+        res.json(result.rows);
+    } catch (err) {
+        res.status(500).json({ msg: 'DW Error: ' + err.message });
+    }
+});
+
+app.get('/api/bi/providers', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM BI_Top_Providers');
+        res.json(result.rows);
+    } catch (err) {
+        res.status(500).json({ msg: 'DW Error: ' + err.message });
+    }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
