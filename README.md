@@ -14,7 +14,7 @@ psql -U postgres -d campus_skill_exchange -f schema.sql
 psql -U postgres -d campus_skill_exchange -f seed.sql
 
 # Install Everything
-cd backend && npm install && cd ../frontend && npm install && cd ..
+cd backend; npm install; cd ../frontend; npm install; cd ..
 ```
 
 ### **🚀 Daily Running**
@@ -22,7 +22,7 @@ Open **two terminals** and run these to start the project:
 
 | **Terminal 1: Backend** | **Terminal 2: Frontend** |
 |:---:|:---:|
-| `cd backend && node server.js` | `cd frontend && npm run dev` |
+| `cd backend; node server.js` | `cd frontend; npm run dev` |
 
 ---
 
