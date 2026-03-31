@@ -1,5 +1,14 @@
 -- Campus Skill Exchange System - DDL Schema
--- 
+
+-- 0. Clear existing tables (in reverse order of dependencies)
+DROP TABLE IF EXISTS FEEDBACK;
+DROP TABLE IF EXISTS SERVICE_ASSIGNMENT;
+DROP TABLE IF EXISTS SERVICE_REQUEST;
+DROP TABLE IF EXISTS USER_SKILL;
+DROP TABLE IF EXISTS SKILL;
+DROP TABLE IF EXISTS CATEGORY;
+DROP TABLE IF EXISTS USER_PHONE;
+DROP TABLE IF EXISTS "USER";
 
 -- 1. USER Entity
 CREATE TABLE "USER" (
@@ -10,6 +19,7 @@ CREATE TABLE "USER" (
     department VARCHAR(100) NOT NULL,
     year INT NOT NULL,
     reputation_score DECIMAL(3, 2) DEFAULT 0.00,
+    role VARCHAR(50) DEFAULT 'Receiver', -- 'Provider', 'Receiver', 'Both'
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
