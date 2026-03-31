@@ -9,10 +9,13 @@ A full-stack peer-to-peer platform where university students can **offer**, **di
 ### **🔧 First-Time Setup**
 Run these once to get your database and dependencies ready:
 ```bash
-# 1. Install Everything
+# 1. Enter the project folder
+cd campus_skill_exchange
+
+# 2. Install Everything
 cd backend; npm install; cd ../frontend; npm install; cd ..
 
-# 2. Set up Database (Automatically seeds all users & skills)
+# 3. Set up Database (Automatically seeds all users & skills)
 cd backend; node init_db.js
 ```
 
