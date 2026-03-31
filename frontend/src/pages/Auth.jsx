@@ -60,7 +60,7 @@ export default function Auth({ isLogin = true }) {
                                 <input
                                     type="text"
                                     className="w-full bg-slate-800/60 border border-slate-600 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all placeholder-slate-500"
-                                    placeholder="Nithin Naik"
+                                    placeholder="John Doe"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                     required
@@ -71,7 +71,7 @@ export default function Auth({ isLogin = true }) {
                                 <input
                                     type="tel"
                                     className="w-full bg-slate-800/60 border border-slate-600 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all placeholder-slate-500"
-                                    placeholder="+91 99003 15409"
+                                    placeholder="+1 (555) 123-4567"
                                     value={phone}
                                     onChange={(e) => setPhone(e.target.value)}
                                     required
