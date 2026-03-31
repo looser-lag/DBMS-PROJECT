@@ -18,11 +18,16 @@ export default function Auth({ isLogin = true }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            console.log(isLogin ? 'Logging in:' : 'Registering:', { email, name, role });
             if (isLogin) {
                 await login(email, password);
             } else {
-                await register({ name, email, password, role, phone, department, year: parseInt(year) });
+                // Automatically add +91 if user provides a 10-digit Indian number
+                let formattedPhone = phone.replace(/\s/g, ''); // Remove spaces
+                if (formattedPhone.length === 10 && !formattedPhone.startsWith('+')) {
+                    formattedPhone = `+91 ${formattedPhone}`;
+                }
+                
+                await register({ name, email, password, role, phone: formattedPhone, department, year: parseInt(year) });
             }
             navigate('/dashboard');
         } catch (error) {
