@@ -4,6 +4,28 @@ A full-stack peer-to-peer platform where university students can **offer**, **di
 
 ---
 
+## ⚡ Quick Copy-Paste Commands
+
+### **🔧 First-Time Setup**
+Run these once to get your database and dependencies ready:
+```bash
+# Set up Database
+psql -U postgres -d campus_skill_exchange -f schema.sql
+psql -U postgres -d campus_skill_exchange -f seed.sql
+
+# Install Everything
+cd backend && npm install && cd ../frontend && npm install && cd ..
+```
+
+### **🚀 Daily Running**
+Open **two terminals** and run these to start the project:
+
+| **Terminal 1: Backend** | **Terminal 2: Frontend** |
+|:---:|:---:|
+| `cd backend && node server.js` | `cd frontend && npm run dev` |
+
+---
+
 ## 🚀 Quick Start & Setup Guide
 
 ### 🛠️ Prerequisites & Downloads
