@@ -3,6 +3,7 @@ const cors = require('cors');
 const pool = require('./db');
 require('dotenv').config();
 const path = require('path');
+const bcrypt = require('bcrypt');
 
 const app = express();
 
@@ -31,10 +32,14 @@ app.post('/api/auth/register', async (req, res) => {
             return res.status(400).json({ msg: 'User already exists' });
         }
 
+        // Hash password
+        const salt = await bcrypt.genSalt(10);
+        const passwordHash = await bcrypt.hash(password, salt);
+
         // Insert new user
         const newUser = await pool.query(
-            'INSERT INTO "USER" (name, email, department, year, reputation_score, role) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-            [name, email, department || 'General', year || 1, 0.0, role || 'Receiver']
+            'INSERT INTO "USER" (name, email, password_hash, department, year, reputation_score, role) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+            [name, email, passwordHash, department || 'General', year || 1, 0.0, role || 'Receiver']
         );
 
         if (phone) {
@@ -59,6 +64,11 @@ app.post('/api/auth/login', async (req, res) => {
     try {
         const user = await pool.query('SELECT * FROM "USER" WHERE email = $1', [email]);
         if (user.rows.length === 0) {
+            return res.status(400).json({ msg: 'Invalid Credentials' });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.rows[0].password_hash);
+        if (!isMatch) {
             return res.status(400).json({ msg: 'Invalid Credentials' });
         }
 
