@@ -106,7 +106,7 @@ INSERT INTO USER_SKILL (user_id, skill_id, experience_level, hourly_rate, availa
 (11, 30, 'Expert', 25.00, TRUE, 'Weekends'),
 (12, 19, 'Intermediate', 18.00, TRUE, 'Tuesday, Thursday'),
 (13, 8, 'Intermediate', 15.00, TRUE, 'Mondays'),
-(15, 31, 'Expert', 12.00, TRUE, 'Every morning'),
+(15, 31, 'Expert', 12.00, TRUE, 'Everyday (Morning)'),
 (16, 23, 'Expert', 20.00, TRUE, 'Weekends'),
 (16, 24, 'Expert', 25.00, TRUE, 'Weekends'),
 (20, 23, 'Intermediate', 15.00, TRUE, 'Wednesdays'),

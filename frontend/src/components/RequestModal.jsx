@@ -26,7 +26,7 @@ export default function RequestModal({ skill, onClose, onSubmit }) {
         const dayName = date.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase(); // e.g. "monday"
         const avail = availStr.toLowerCase();
 
-        if (avail.includes('everyday') || avail.includes('anytime')) return true;
+        if (avail.includes('everyday') || avail.includes('anytime') || avail.includes('every') || avail.includes('daily') || avail.includes('all week')) return true;
         if (avail.includes('weekend')) {
             return dayName === 'saturday' || dayName === 'sunday';
         }
