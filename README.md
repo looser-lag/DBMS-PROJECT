@@ -121,6 +121,10 @@ npm run dev
 - **Backend API**: [http://localhost:3000](http://localhost:3000)
 - **Admin Panel**: [http://localhost:3000/admin](http://localhost:3000/admin)
 
+> **🗝️ Default Admin Demo Account:** 
+> - **Email**: `admin@university.edu`
+> - **Password**: `password123`
+
 ---
 
 ## ✨ Features
