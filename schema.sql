@@ -1,17 +1,10 @@
 -- Campus Skill Exchange System - DDL Schema
 
--- 0. Clear existing tables (in reverse order of dependencies)
-DROP TABLE IF EXISTS FEEDBACK;
-DROP TABLE IF EXISTS SERVICE_ASSIGNMENT;
-DROP TABLE IF EXISTS SERVICE_REQUEST;
-DROP TABLE IF EXISTS USER_SKILL;
-DROP TABLE IF EXISTS SKILL;
-DROP TABLE IF EXISTS CATEGORY;
-DROP TABLE IF EXISTS USER_PHONE;
-DROP TABLE IF EXISTS "USER";
+-- 0. Table definitions (Safe: No automatic DROP TABLE)
+-- To manually reset the database, use DROP TABLE commands in the Admin SQL panel or psql.
 
 -- 1. USER Entity
-CREATE TABLE "USER" (
+CREATE TABLE IF NOT EXISTS "USER" (
     user_id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
@@ -24,7 +17,7 @@ CREATE TABLE "USER" (
 );
 
 -- 2. USER_PHONE Entity
-CREATE TABLE USER_PHONE (
+CREATE TABLE IF NOT EXISTS USER_PHONE (
     user_id INT NOT NULL,
     phone_number VARCHAR(20) NOT NULL,
     PRIMARY KEY (user_id, phone_number),
@@ -32,24 +25,25 @@ CREATE TABLE USER_PHONE (
 );
 
 -- 3. CATEGORY Entity
-CREATE TABLE CATEGORY (
+CREATE TABLE IF NOT EXISTS CATEGORY (
     category_id SERIAL PRIMARY KEY,
     category_name VARCHAR(100) UNIQUE NOT NULL,
     description TEXT
 );
 
 -- 4. SKILL Entity
-CREATE TABLE SKILL (
+CREATE TABLE IF NOT EXISTS SKILL (
     skill_id SERIAL PRIMARY KEY,
     skill_name VARCHAR(100) NOT NULL,
     category_id INT NOT NULL,
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (category_id) REFERENCES CATEGORY(category_id) ON DELETE CASCADE
+    FOREIGN KEY (category_id) REFERENCES CATEGORY(category_id) ON DELETE CASCADE,
+    UNIQUE (skill_name, category_id)
 );
 
 -- 5. USER_SKILL Entity
-CREATE TABLE USER_SKILL (
+CREATE TABLE IF NOT EXISTS USER_SKILL (
     user_id INT NOT NULL,
     skill_id INT NOT NULL,
     experience_level VARCHAR(50), -- e.g., 'Beginner', 'Intermediate', 'Expert'
@@ -62,7 +56,7 @@ CREATE TABLE USER_SKILL (
 );
 
 -- 6. SERVICE_REQUEST Entity
-CREATE TABLE SERVICE_REQUEST (
+CREATE TABLE IF NOT EXISTS SERVICE_REQUEST (
     request_id SERIAL PRIMARY KEY,
     requester_id INT NOT NULL,
     skill_id INT NOT NULL,
@@ -75,7 +69,7 @@ CREATE TABLE SERVICE_REQUEST (
 );
 
 -- 7. SERVICE_ASSIGNMENT Entity
-CREATE TABLE SERVICE_ASSIGNMENT (
+CREATE TABLE IF NOT EXISTS SERVICE_ASSIGNMENT (
     assignment_id SERIAL PRIMARY KEY,
     request_id INT UNIQUE NOT NULL, -- 1:1 Relationship with Request
     provider_id INT NOT NULL,
@@ -87,10 +81,11 @@ CREATE TABLE SERVICE_ASSIGNMENT (
 );
 
 -- 8. FEEDBACK Entity
-CREATE TABLE FEEDBACK (
+CREATE TABLE IF NOT EXISTS FEEDBACK (
     assignment_id INT PRIMARY KEY, -- 1:1 Relationship with Assignment
     rating INT CHECK (rating >= 1 AND rating <= 5) NOT NULL,
     comments TEXT,
     feedback_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (assignment_id) REFERENCES SERVICE_ASSIGNMENT(assignment_id) ON DELETE CASCADE
 );
+

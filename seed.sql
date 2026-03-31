@@ -12,7 +12,8 @@ INSERT INTO CATEGORY (category_name, description) VALUES
 ('Language Practice', 'Conversational practice for various languages'),
 ('Music Lessons', 'Instrumental and vocal coaching'),
 ('Fitness Training', 'Personal training and workout planning'),
-('Tech Support', 'Computer troubleshooting and software setup');
+('Tech Support', 'Computer troubleshooting and software setup')
+ON CONFLICT (category_name) DO NOTHING;
 
 -- 2. Insert Skills
 INSERT INTO SKILL (skill_name, category_id, description) VALUES
@@ -50,7 +51,8 @@ INSERT INTO SKILL (skill_name, category_id, description) VALUES
 ('Yoga Instruction', 9, 'Basic yoga stretches and routines'),
 ('PC Building', 10, 'Help picking parts and assembling a PC'),
 ('Mac Troubleshooting', 10, 'Help fixing software issues on macOS'),
-('Virus Removal', 10, 'Scanning and removing malware');
+('Virus Removal', 10, 'Scanning and removing malware')
+ON CONFLICT (skill_name, category_id) DO NOTHING;
 
 -- 3. Insert Users (All mock users have password 'password123')
 INSERT INTO "USER" (name, email, password_hash, department, year, reputation_score, role) VALUES
@@ -78,7 +80,9 @@ INSERT INTO "USER" (name, email, password_hash, department, year, reputation_sco
 ('Victoria Beckham', 'victoria.b@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Music', 3, 4.5, 'Provider'),
 ('Wade Wilson', 'wade.w@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Communications', 4, 4.1, 'Receiver'),
 ('Xena Warrior', 'xena.w@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Physical Education', 2, 4.7, 'Both'),
-('Yusuf Amir', 'yusuf.a@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Economics', 1, 0.0, 'Receiver');
+('Yusuf Amir', 'yusuf.a@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Economics', 1, 0.0, 'Receiver'),
+('Nithin', 'nithin@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Computer Science', 2, 4.5, 'Provider')
+ON CONFLICT (email) DO NOTHING;
 
 -- 4. Insert User Phones
 INSERT INTO USER_PHONE (user_id, phone_number) VALUES
@@ -87,7 +91,8 @@ INSERT INTO USER_PHONE (user_id, phone_number) VALUES
 (10, '+91 70220 98765'),(11, '+91 63621 54321'),(12, '+91 94480 12345'),(13, '+91 96112 34567'),(14, '+91 81234 56789'),
 (15, '+91 99723 12345'),(16, '+91 99801 23456'),(17, '+91 98800 12345'),(18, '+91 97312 34567'),(19, '+91 94490 87654'),
 (20, '+91 95350 12345'),(21, '+91 96200 54321'),(22, '+91 91410 12345'),(23, '+91 97400 98765'),(24, '+91 90080 12345'),
-(25, '+91 88840 54321');
+(25, '+91 88840 54321'),(22, '+91 99887 12345')
+ON CONFLICT (user_id, phone_number) DO NOTHING;
 
 -- 5. Insert User Skills (Providers)
 INSERT INTO USER_SKILL (user_id, skill_id, experience_level, hourly_rate, availability_status, availability) VALUES
@@ -112,40 +117,45 @@ INSERT INTO USER_SKILL (user_id, skill_id, experience_level, hourly_rate, availa
 (20, 23, 'Intermediate', 15.00, TRUE, 'Wednesdays'),
 (22, 29, 'Expert', 30.00, TRUE, 'Saturdays'),
 (24, 32, 'Expert', 15.00, TRUE, 'Tuesdays and Thursdays'),
-(25, 33, 'Intermediate', 20.00, TRUE, 'Weekends');
+(25, 33, 'Intermediate', 20.00, TRUE, 'Weekends'),
+(22, 28, 'Expert', 15.00, TRUE, 'Everyday')
+ON CONFLICT (user_id, skill_id) DO NOTHING;
 
 -- 6. Insert Service Requests
-INSERT INTO SERVICE_REQUEST (requester_id, skill_id, description, preferred_date, status) VALUES
-(4, 10, 'Need help debugging a Python loop assignment.', CURRENT_DATE + INTERVAL '2 days', 'Assigned'),
-(2, 16, 'Need a basic wireframe for my engineering project app.', CURRENT_DATE + INTERVAL '5 days', 'Pending'),
-(4, 6, 'Looking for someone to review my resume for a summer internship.', CURRENT_DATE + INTERVAL '1 day', 'Completed'),
-(1, 17, 'Need a quick logo for a CS club hackathon.', CURRENT_DATE + INTERVAL '7 days', 'Pending'),
-(7, 23, 'Can someone read my history essay and check the flow?', CURRENT_DATE + INTERVAL '3 days', 'Assigned'),
-(8, 4, 'Struggling with the biology lab report, need tutoring.', CURRENT_DATE + INTERVAL '2 days', 'Completed'),
-(14, 10, 'Help setting up Python environment on my new laptop.', CURRENT_DATE + INTERVAL '1 day', 'Pending'),
-(17, 8, 'Need my LinkedIn reviewed for a poli-sci internship.', CURRENT_DATE + INTERVAL '4 days', 'Assigned'),
-(19, 31, 'Want to learn how to deadlift safely.', CURRENT_DATE + INTERVAL '2 days', 'Pending'),
-(21, 1, 'I have a calc midterm next week, need practice problems.', CURRENT_DATE + INTERVAL '5 days', 'Pending'),
-(23, 19, 'Need to photoshop out a background for a presentation.', CURRENT_DATE + INTERVAL '1 day', 'Completed'),
-(12, 13, 'React state management is confusing, help!', CURRENT_DATE + INTERVAL '3 days', 'Assigned'),
-(6, 33, 'Building a PC and need someone to double check parts.', CURRENT_DATE + INTERVAL '6 days', 'Pending'),
-(3, 10, 'Need a quick python script for data parsing.', CURRENT_DATE + INTERVAL '2 days', 'Completed'),
-(18, 29, 'Want to learn basic piano chords for a song.', CURRENT_DATE + INTERVAL '10 days', 'Pending');
+INSERT INTO SERVICE_REQUEST (request_id, requester_id, skill_id, description, preferred_date, status) VALUES
+(1, 4, 10, 'Need help debugging a Python loop assignment.', CURRENT_DATE + INTERVAL '2 days', 'Assigned'),
+(2, 2, 16, 'Need a basic wireframe for my engineering project app.', CURRENT_DATE + INTERVAL '5 days', 'Pending'),
+(3, 4, 6, 'Looking for someone to review my resume for a summer internship.', CURRENT_DATE + INTERVAL '1 day', 'Completed'),
+(4, 1, 17, 'Need a quick logo for a CS club hackathon.', CURRENT_DATE + INTERVAL '7 days', 'Pending'),
+(5, 7, 23, 'Can someone read my history essay and check the flow?', CURRENT_DATE + INTERVAL '3 days', 'Assigned'),
+(6, 8, 4, 'Struggling with the biology lab report, need tutoring.', CURRENT_DATE + INTERVAL '2 days', 'Completed'),
+(7, 14, 10, 'Help setting up Python environment on my new laptop.', CURRENT_DATE + INTERVAL '1 day', 'Pending'),
+(8, 17, 8, 'Need my LinkedIn reviewed for a poli-sci internship.', CURRENT_DATE + INTERVAL '4 days', 'Assigned'),
+(9, 19, 31, 'Want to learn how to deadlift safely.', CURRENT_DATE + INTERVAL '2 days', 'Pending'),
+(10, 21, 1, 'I have a calc midterm next week, need practice problems.', CURRENT_DATE + INTERVAL '5 days', 'Pending'),
+(11, 23, 19, 'Need to photoshop out a background for a presentation.', CURRENT_DATE + INTERVAL '1 day', 'Completed'),
+(12, 12, 13, 'React state management is confusing, help!', CURRENT_DATE + INTERVAL '3 days', 'Assigned'),
+(13, 6, 33, 'Building a PC and need someone to double check parts.', CURRENT_DATE + INTERVAL '6 days', 'Pending'),
+(14, 3, 10, 'Need a quick python script for data parsing.', CURRENT_DATE + INTERVAL '2 days', 'Completed'),
+(15, 18, 29, 'Want to learn basic piano chords for a song.', CURRENT_DATE + INTERVAL '10 days', 'Pending')
+ON CONFLICT (request_id) DO NOTHING;
 
 -- 7. Insert Service Assignments
-INSERT INTO SERVICE_ASSIGNMENT (request_id, provider_id, assigned_date, completion_date, status) VALUES
-(1, 1, CURRENT_TIMESTAMP - INTERVAL '1 day', NULL, 'Accepted'), -- ID 1
-(3, 5, CURRENT_TIMESTAMP - INTERVAL '3 days', CURRENT_TIMESTAMP - INTERVAL '1 day', 'Completed'), -- ID 2
-(5, 16, CURRENT_TIMESTAMP - INTERVAL '1 day', NULL, 'Accepted'), -- ID 3
-(6, 6, CURRENT_TIMESTAMP - INTERVAL '4 days', CURRENT_TIMESTAMP - INTERVAL '2 days', 'Completed'), -- ID 4
-(8, 13, CURRENT_TIMESTAMP - INTERVAL '1 day', NULL, 'Accepted'), -- ID 5
-(11, 12, CURRENT_TIMESTAMP - INTERVAL '2 days', CURRENT_TIMESTAMP - INTERVAL '1 day', 'Completed'), -- ID 6
-(12, 1, CURRENT_TIMESTAMP - INTERVAL '1 day', NULL, 'Accepted'), -- ID 7
-(14, 5, CURRENT_TIMESTAMP - INTERVAL '5 days', CURRENT_TIMESTAMP - INTERVAL '2 days', 'Completed'); -- ID 8
+INSERT INTO SERVICE_ASSIGNMENT (assignment_id, request_id, provider_id, assigned_date, completion_date, status) VALUES
+(1, 1, 1, CURRENT_TIMESTAMP - INTERVAL '1 day', NULL, 'Accepted'),
+(2, 3, 5, CURRENT_TIMESTAMP - INTERVAL '3 days', CURRENT_TIMESTAMP - INTERVAL '1 day', 'Completed'),
+(3, 5, 16, CURRENT_TIMESTAMP - INTERVAL '1 day', NULL, 'Accepted'),
+(4, 6, 6, CURRENT_TIMESTAMP - INTERVAL '4 days', CURRENT_TIMESTAMP - INTERVAL '2 days', 'Completed'),
+(5, 8, 13, CURRENT_TIMESTAMP - INTERVAL '1 day', NULL, 'Accepted'),
+(6, 11, 12, CURRENT_TIMESTAMP - INTERVAL '2 days', CURRENT_TIMESTAMP - INTERVAL '1 day', 'Completed'),
+(7, 12, 1, CURRENT_TIMESTAMP - INTERVAL '1 day', NULL, 'Accepted'),
+(8, 14, 5, CURRENT_TIMESTAMP - INTERVAL '5 days', CURRENT_TIMESTAMP - INTERVAL '2 days', 'Completed')
+ON CONFLICT (assignment_id) DO NOTHING;
 
 -- 8. Insert Feedback
 INSERT INTO FEEDBACK (assignment_id, rating, comments, feedback_date) VALUES
 (2, 5, 'Evan was incredibly helpful. My resume looks much better now!', CURRENT_TIMESTAMP - INTERVAL '12 hours'),
 (4, 4, 'Fiona explained the biology concepts very clearly.', CURRENT_TIMESTAMP - INTERVAL '1 day'),
 (6, 5, 'Luna was so quick with the photoshop request, looks awesome!', CURRENT_TIMESTAMP - INTERVAL '5 hours'),
-(8, 5, 'Evan wrote a perfect script that saved me hours of manual work.', CURRENT_TIMESTAMP - INTERVAL '1 day');
+(8, 5, 'Evan wrote a perfect script that saved me hours of manual work.', CURRENT_TIMESTAMP - INTERVAL '1 day')
+ON CONFLICT (assignment_id) DO NOTHING;

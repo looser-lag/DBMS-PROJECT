@@ -15,7 +15,7 @@ cd campus_skill_exchange
 # 2. Install Everything
 cd backend; npm install; cd ../frontend; npm install; cd ..
 
-# 3. Set up Database (Automatically seeds all users & skills)
+# 3. Set up Database (Safe: Will not overwrite existing data)
 cd backend; node init_db.js
 ```
 
@@ -25,6 +25,22 @@ Open **two terminals** and run these from the project root:
 | **Terminal 1: Backend** | **Terminal 2: Frontend** |
 |:---:|:---:|
 | `cd backend; node server.js` | `cd frontend; npm run dev` |
+
+---
+
+### **💾 Dynamic Seeds (Save My Data)**
+If you register new users, add skills, or create requests via the frontend and want to **save them permanently** into the `seed.sql` file, follow these steps:
+
+1. **Run the export command**:
+   ```bash
+   cd backend
+   node export_seeds.js
+   ```
+2. **Result**: This will automatically update the `seed.sql` file in the root directory with all your current database data!
+
+**Why use this?**
+- It makes your "frontend" data part of the "permanent" project files.
+- It ensures 'Nithin' and other new accounts are never lost, even if you move the project to another computer.
 
 ---
 
