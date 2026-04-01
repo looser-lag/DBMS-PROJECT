@@ -124,6 +124,12 @@ npm run dev
 > **🗝️ Default Admin Demo Account:** 
 > - **Email**: `admin@university.edu`
 > - **Password**: `password123`
+> 
+> *Note: To view the charts in the Admin Analytics page, you must populate the Data Warehouse by running the ETL script:*
+> ```bash
+> cd backend
+> node run_etl.js
+> ```
 
 ---
 
