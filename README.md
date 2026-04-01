@@ -256,6 +256,64 @@ All tables are in **3NF / BCNF**:
 | SERVICE_REQUEST ↔ SERVICE_ASSIGNMENT | 1:1 | Each request has at most one assignment |
 | SERVICE_ASSIGNMENT ↔ FEEDBACK | 1:1 | Each assignment receives at most one feedback |
 
+### 🏢 Data Warehouse & Business Intelligence (OLAP)
+
+In addition to the main operational database, this project features an integrated **Data Warehouse** built inside the same PostgreSQL instance using a **Star Schema** to support the admin analytics dashboard.
+
+1. **ETL Pipeline**: The `backend/run_etl.js` Node script Extracts raw data from the operational tables (`USER`, `SKILL`, `SERVICE_ASSIGNMENT`), Transforms it (e.g., breaking down dates into year/month/weekend flags), and Loads it into specialized analytical tables.
+2. **Star Schema**: 
+   - **Dimensions**: `D_USER`, `D_SKILL`, `D_DATE`
+   - **Fact Table**: `F_SERVICE_COMPLETIONS` (tracks completed jobs, participants, and ratings)
+3. **SQL Views**: The `data_warehouse.sql` file creates pre-calculated virtual tables (views like `BI_Department_Performance`, `BI_Popular_Categories`) on top of the internal Star Schema.
+4. **BI Endpoints**: The backend directly queries these pre-calculated SQL views via `/api/bi/*` endpoints using the standard connection pool, instantly serving optimized analytical data to the frontend React charts without heavy calculation.
+
+#### Star Schema Diagram
+
+```mermaid
+erDiagram
+    D_DATE ||--o{ F_SERVICE_COMPLETIONS : "completion_date_key"
+    D_USER ||--o{ F_SERVICE_COMPLETIONS : "provider_key"
+    D_USER ||--o{ F_SERVICE_COMPLETIONS : "requester_key"
+    D_SKILL ||--o{ F_SERVICE_COMPLETIONS : "skill_key"
+
+    D_DATE {
+        int date_key PK
+        date full_date
+        int year
+        int month
+        int day
+        varchar day_name
+        varchar month_name
+        boolean is_weekend
+    }
+
+    D_USER {
+        int user_key PK
+        int user_id
+        varchar name
+        varchar department
+        int year
+        varchar role
+    }
+
+    D_SKILL {
+        int skill_key PK
+        int skill_id
+        varchar skill_name
+        varchar category_name
+    }
+
+    F_SERVICE_COMPLETIONS {
+        int completion_id PK
+        int assignment_id
+        int provider_key FK
+        int requester_key FK
+        int skill_key FK
+        int completion_date_key FK
+        int rating
+    }
+```
+
 ---
 
 ## 🛠️ Tech Stack
