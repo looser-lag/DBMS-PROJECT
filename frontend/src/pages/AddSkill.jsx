@@ -105,7 +105,7 @@ export default function AddSkill() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label className="block text-sm font-medium text-slate-300 mb-2">Hourly Rate (₹)</label>
                             <input
@@ -119,18 +119,46 @@ export default function AddSkill() {
                                 onChange={(e) => setHourlyRate(e.target.value)}
                             />
                         </div>
-
                         <div>
-                            <label className="block text-sm font-medium text-slate-300 mb-2">Availability</label>
-                            <input
-                                type="text"
-                                required
+                            <label className="block text-sm font-medium text-slate-300 mb-2">Experience Level</label>
+                            <select
                                 className="w-full bg-slate-800/60 border border-slate-600 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 outline-none text-white"
-                                placeholder="e.g. Weekends, Everyday"
-                                value={availability}
-                                onChange={(e) => setAvailability(e.target.value)}
-                            />
+                                value={experienceLevel}
+                                onChange={(e) => setExperienceLevel(e.target.value)}
+                            >
+                                <option value="Beginner">Beginner</option>
+                                <option value="Intermediate">Intermediate</option>
+                                <option value="Advanced">Advanced</option>
+                                <option value="Expert">Expert</option>
+                            </select>
                         </div>
+                    </div>
+
+                    <div className="space-y-4">
+                        <label className="block text-sm font-medium text-slate-300">Availability (Select Days)</label>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                            {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(day => (
+                                <label key={day} className="flex items-center gap-3 p-3 bg-slate-800/40 border border-slate-700 rounded-xl cursor-pointer hover:bg-slate-700/50 transition-colors group">
+                                    <input
+                                        type="checkbox"
+                                        className="w-5 h-5 rounded border-slate-600 bg-slate-900 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-slate-900"
+                                        checked={Array.isArray(availability) ? availability.includes(day) : false}
+                                        onChange={(e) => {
+                                            const current = Array.isArray(availability) ? availability : [];
+                                            if (e.target.checked) {
+                                                setAvailability([...current, day]);
+                                            } else {
+                                                setAvailability(current.filter(d => d !== day));
+                                            }
+                                        }}
+                                    />
+                                    <span className="text-sm text-slate-300 group-hover:text-white transition-colors">{day}</span>
+                                </label>
+                            ))}
+                        </div>
+                        {(!Array.isArray(availability) || availability.length === 0) && (
+                            <p className="text-xs text-amber-400 mt-1">Please select at least one day.</p>
+                        )}
                     </div>
 
                     <div className="pt-4 border-t border-white/10 flex justify-end gap-3 mt-8">

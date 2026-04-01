@@ -167,6 +167,7 @@ npm run dev
 erDiagram
     USER ||--o{ USER_PHONE : has
     USER ||--o{ USER_SKILL : offers
+    USER_SKILL ||--o{ USER_SKILL_AVAILABILITY : "available on"
     USER ||--o{ SERVICE_REQUEST : creates
     USER ||--o{ SERVICE_ASSIGNMENT : "assigned to"
 
@@ -213,7 +214,12 @@ erDiagram
         varchar experience_level
         decimal hourly_rate
         boolean availability_status
-        varchar availability
+    }
+
+    USER_SKILL_AVAILABILITY {
+        int user_id PK, FK
+        int skill_id PK, FK
+        varchar day_of_week PK
     }
 
     SERVICE_REQUEST {
@@ -247,7 +253,7 @@ erDiagram
 
 All tables are in **3NF / BCNF**:
 
-- **1NF**: All attributes are atomic; multi-valued phone numbers are separated into `USER_PHONE`
+- **1NF**: All attributes are atomic; multi-valued phone numbers are separated into `USER_PHONE`, and multi-valued skill availability is normalized into `USER_SKILL_AVAILABILITY`.
 - **2NF**: No partial dependencies — all non-key attributes depend on the full primary key
 - **3NF/BCNF**: No transitive dependencies — e.g., `SKILL.category_id` references `CATEGORY` rather than storing category info redundantly
 
@@ -599,14 +605,15 @@ ORDER BY month DESC;
 
 ### 16. Find Providers Available on Weekends with Expert Level
 ```sql
-SELECT u.name, u.department, s.skill_name,
-       us.hourly_rate, us.availability
+SELECT u.name, u.department, s.skill_name, us.hourly_rate
 FROM "USER" u
 JOIN user_skill us ON u.user_id = us.user_id
 JOIN skill s ON us.skill_id = s.skill_id
+JOIN user_skill_availability usa ON us.user_id = usa.user_id AND us.skill_id = usa.skill_id
 WHERE us.experience_level = 'Expert'
   AND us.availability_status = TRUE
-  AND us.availability ILIKE '%weekend%'
+  AND usa.day_of_week IN ('Saturday', 'Sunday')
+GROUP BY u.user_id, u.name, u.department, s.skill_name, us.hourly_rate
 ORDER BY us.hourly_rate ASC;
 ```
 

@@ -49,13 +49,21 @@ CREATE TABLE IF NOT EXISTS USER_SKILL (
     experience_level VARCHAR(50), -- e.g., 'Beginner', 'Intermediate', 'Expert'
     hourly_rate DECIMAL(10, 2) NOT NULL,
     availability_status BOOLEAN DEFAULT TRUE,
-    availability VARCHAR(100), -- e.g., 'Weekends', 'Everyday', 'Monday'
     PRIMARY KEY (user_id, skill_id),
     FOREIGN KEY (user_id) REFERENCES "USER"(user_id) ON DELETE CASCADE,
     FOREIGN KEY (skill_id) REFERENCES SKILL(skill_id) ON DELETE CASCADE
 );
 
--- 6. SERVICE_REQUEST Entity
+-- 6. USER_SKILL_AVAILABILITY Entity (Normalized for 1NF Atomicity)
+CREATE TABLE IF NOT EXISTS USER_SKILL_AVAILABILITY (
+    user_id INT NOT NULL,
+    skill_id INT NOT NULL,
+    day_of_week VARCHAR(20) NOT NULL,
+    PRIMARY KEY (user_id, skill_id, day_of_week),
+    FOREIGN KEY (user_id, skill_id) REFERENCES USER_SKILL(user_id, skill_id) ON DELETE CASCADE
+);
+
+-- 7. SERVICE_REQUEST Entity
 CREATE TABLE IF NOT EXISTS SERVICE_REQUEST (
     request_id SERIAL PRIMARY KEY,
     requester_id INT NOT NULL,

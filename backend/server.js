@@ -89,7 +89,10 @@ app.get('/api/skills', async (req, res) => {
         const result = await pool.query(
             `SELECT s.skill_id, s.skill_name, c.category_name, u.name as provider_name, 
                     us.user_id as provider_id, us.experience_level, us.hourly_rate, 
-                    us.availability, u.reputation_score
+                    u.reputation_score,
+                    (SELECT STRING_AGG(day_of_week, ', ') 
+                     FROM USER_SKILL_AVAILABILITY 
+                     WHERE user_id = us.user_id AND skill_id = us.skill_id) as availability
              FROM SKILL s
              JOIN CATEGORY c ON s.category_id = c.category_id
              JOIN USER_SKILL us ON s.skill_id = us.skill_id
@@ -141,23 +144,64 @@ app.post('/api/skills', async (req, res) => {
         let numericRate = parseFloat(hourlyRate);
         if (isNaN(numericRate)) numericRate = 0.0;
 
-        const existingUserSkill = await pool.query("SELECT * FROM USER_SKILL WHERE user_id = $1 AND skill_id = $2", [userId || 1, skillId]);
+        const targetUserId = userId || 1;
+        const existingUserSkill = await pool.query("SELECT * FROM USER_SKILL WHERE user_id = $1 AND skill_id = $2", [targetUserId, skillId]);
         
         if (existingUserSkill.rows.length > 0) {
             // Update existing entry
             await pool.query(
-                "UPDATE USER_SKILL SET experience_level = $1, hourly_rate = $2, availability = $3, availability_status = $4 WHERE user_id = $5 AND skill_id = $6",
-                [experienceLevel, numericRate, availability || 'Weekends', true, userId || 1, skillId]
+                "UPDATE USER_SKILL SET experience_level = $1, hourly_rate = $2, availability_status = $3 WHERE user_id = $4 AND skill_id = $5",
+                [experienceLevel, numericRate, true, targetUserId, skillId]
             );
-            return res.json({ message: "Skill info updated!", skillId });
         } else {
             // Insert into USER_SKILL table
             await pool.query(
-                "INSERT INTO USER_SKILL (user_id, skill_id, experience_level, hourly_rate, availability, availability_status) VALUES ($1, $2, $3, $4, $5, $6)",
-                [userId || 1, skillId, experienceLevel, numericRate, availability || 'Weekends', true]
+                "INSERT INTO USER_SKILL (user_id, skill_id, experience_level, hourly_rate, availability_status) VALUES ($1, $2, $3, $4, $5)",
+                [targetUserId, skillId, experienceLevel, numericRate, true]
             );
-            res.json({ message: "Skill successfully added!", skillId });
         }
+
+        // --- MANAGE AVAILABILITY ---
+        // Clean old availability
+        await pool.query("DELETE FROM USER_SKILL_AVAILABILITY WHERE user_id = $1 AND skill_id = $2", [targetUserId, skillId]);
+
+        // Insert new availability (handle array or string)
+        let days = [];
+        if (Array.isArray(availability)) {
+            days = availability;
+        } else if (typeof availability === 'string') {
+            // Mapping shortcuts for backward compatibility or simple text input
+            const normalized = availability.toLowerCase();
+            if (normalized.includes('everyday') || normalized.includes('anytime')) {
+                days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            } else if (normalized.includes('weekend')) {
+                days = ['Saturday', 'Sunday'];
+            } else {
+                days = availability.split(/[,\s]+/).map(d => d.trim()).filter(d => d);
+            }
+        }
+
+        for (let day of days) {
+            // Basic normalization (e.g., 'mondays' -> 'Monday')
+            const dayMap = {
+                'monday': 'Monday', 'mondays': 'Monday',
+                'tuesday': 'Tuesday', 'tuesdays': 'Tuesday',
+                'wednesday': 'Wednesday', 'wednesdays': 'Wednesday',
+                'thursday': 'Thursday', 'thursdays': 'Thursday',
+                'friday': 'Friday', 'fridays': 'Friday',
+                'saturday': 'Saturday', 'saturdays': 'Saturday',
+                'sunday': 'Sunday', 'sundays': 'Sunday'
+            };
+            const mappedDay = dayMap[day.toLowerCase()];
+            if (mappedDay) {
+                await pool.query(
+                    "INSERT INTO USER_SKILL_AVAILABILITY (user_id, skill_id, day_of_week) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING",
+                    [targetUserId, skillId, mappedDay]
+                );
+            }
+        }
+
+        res.json({ message: "Skill info saved successfully!", skillId });
     } catch (err) {
         console.error("Add Skill Error:", err.stack);
         res.status(500).json({ msg: 'Database error adding skill: ' + err.message });
@@ -351,37 +395,22 @@ app.post('/api/requests', async (req, res) => {
 
         // 1. Check availability if provider is known
         if (providerId) {
-            const availResult = await pool.query(
-                "SELECT availability FROM USER_SKILL WHERE user_id = $1 AND skill_id = $2",
-                [providerId, skillId]
+            const date = new Date(preferredDate);
+            const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
+
+            const availCheck = await pool.query(
+                "SELECT 1 FROM USER_SKILL_AVAILABILITY WHERE user_id = $1 AND skill_id = $2 AND day_of_week = $3",
+                [providerId, skillId, dayName]
             );
-            if (availResult.rows.length > 0) {
-                const availStr = availResult.rows[0].availability;
-                const date = new Date(preferredDate);
-                const dayName = date.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
-                const avail = (availStr || '').toLowerCase();
 
-                let isValid = true;
-                if (avail && !avail.includes('everyday') && !avail.includes('anytime')) {
-                    isValid = false;
-                    if (avail.includes('weekend')) {
-                        if (dayName === 'saturday' || dayName === 'sunday') isValid = true;
-                    } else if (avail.includes('weekday')) {
-                        if (!['saturday', 'sunday'].includes(dayName)) isValid = true;
-                    } else {
-                        const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-                        for (const day of days) {
-                            if (avail.includes(day) && dayName === day) {
-                                isValid = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                if (!isValid) {
-                    return res.status(400).json({ msg: `Provider is not available on ${dayName}. Availability: ${availStr}` });
-                }
+            if (availCheck.rows.length === 0) {
+                // Get display string for error message
+                const currentAvail = await pool.query(
+                    "SELECT STRING_AGG(day_of_week, ', ') as days FROM USER_SKILL_AVAILABILITY WHERE user_id = $1 AND skill_id = $2",
+                    [providerId, skillId]
+                );
+                const availStr = currentAvail.rows[0]?.days || 'None set';
+                return res.status(400).json({ msg: `Provider is not available on ${dayName}. Availability: ${availStr}` });
             }
         }
 
