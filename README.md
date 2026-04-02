@@ -263,6 +263,7 @@ All tables are in **3NF / BCNF**:
 |---|---|---|
 | USER ↔ USER_PHONE | 1:N | A user can have multiple phone numbers |
 | USER ↔ USER_SKILL | M:N | Users offer multiple skills; skills offered by multiple users |
+| USER_SKILL ↔ USER_SKILL_AVAILABILITY | 1:N | Each skill offered by a user has specific days of availability |
 | CATEGORY ↔ SKILL | 1:N | Each skill belongs to one category |
 | USER ↔ SERVICE_REQUEST | 1:N | A user can create many requests |
 | SERVICE_REQUEST ↔ SERVICE_ASSIGNMENT | 1:1 | Each request has at most one assignment |

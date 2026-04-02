@@ -1,5 +1,5 @@
 -- Campus Skill Exchange System - DML Seed Data (Exported)
--- Generated on: 2026-04-01T09:03:33.949Z
+-- Generated on: 2026-04-02T05:04:13.364Z
 
 -- Data for CATEGORY
 INSERT INTO CATEGORY (category_name, description) VALUES
@@ -84,7 +84,8 @@ INSERT INTO "USER" (name, email, password_hash, department, year, reputation_sco
 ('Xena Warrior', 'xena.w@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Physical Education', 2, '4.70', 'Both'),
 ('Yusuf Amir', 'yusuf.a@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Economics', 1, '0.00', 'Receiver'),
 ('Nithin', 'nithin@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Computer Science', 2, '4.50', 'Provider'),
-('Site Admin', 'admin@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Administration', 5, '5.00', 'Admin')
+('Site Admin', 'admin@university.edu', '$2b$10$iGNbFmU9aNnsrJMrD6wu5OXtlplye.hsg8igf7YsN4MMo2EnaUDsW', 'Administration', 5, '5.00', 'Admin'),
+('Mohan', 'nithinnaikprince@gmail.com', '$2b$10$KoD4jppzczrhyOyd3fLhYuQBXjx9P2.r0YkAwbrcKEKr4HXrDZ5pu', 'Data science', 2, '0.00', 'Both')
 ON CONFLICT (email) DO NOTHING;
 
 -- Data for USER_PHONE
@@ -117,66 +118,38 @@ INSERT INTO USER_PHONE (user_id, phone_number) VALUES
 (25, '+91 88840 54321'),
 (22, '+91 99887 12345'),
 (26, '+91 99887 12345'),
-(28, '+91 9900315409')
+(28, '+91 9900315409'),
+(29, '+91 9341477657')
 ON CONFLICT (user_id, phone_number) DO NOTHING;
 
 -- Data for USER_SKILL
-INSERT INTO USER_SKILL (user_id, skill_id, experience_level, hourly_rate, availability_status) VALUES
-(1, 10, 'Expert', '15.00', true),
-(1, 13, 'Intermediate', '20.00', true),
-(2, 1, 'Expert', '12.50', true),
-(2, 2, 'Intermediate', '15.00', false),
-(3, 16, 'Expert', '25.00', true),
-(3, 17, 'Expert', '30.00', true),
-(5, 10, 'Expert', '18.00', true),
-(5, 6, 'Intermediate', '10.00', true),
-(6, 4, 'Expert', '15.00', true),
-(9, 2, 'Expert', '20.00', true),
-(10, 1, 'Expert', '20.00', true),
-(10, 5, 'Intermediate', '15.00', true),
-(11, 30, 'Expert', '25.00', true),
-(12, 19, 'Intermediate', '18.00', true),
-(13, 8, 'Intermediate', '15.00', true),
-(15, 31, 'Expert', '12.00', true),
-(16, 23, 'Expert', '20.00', true),
-(16, 24, 'Expert', '25.00', true),
-(20, 23, 'Intermediate', '15.00', true),
-(22, 29, 'Expert', '30.00', true),
-(24, 32, 'Expert', '15.00', true),
-(25, 33, 'Intermediate', '20.00', true),
-(22, 28, 'Expert', '15.00', true),
-(26, 28, 'Expert', '15.00', true),
-(26, 36, 'Advanced', '200.00', true)
+INSERT INTO USER_SKILL (user_id, skill_id, experience_level, hourly_rate, availability_status, availability) VALUES
+(1, 10, 'Expert', '15.00', true, ),
+(1, 13, 'Intermediate', '20.00', true, ),
+(2, 1, 'Expert', '12.50', true, ),
+(2, 2, 'Intermediate', '15.00', false, ),
+(3, 16, 'Expert', '25.00', true, ),
+(3, 17, 'Expert', '30.00', true, ),
+(5, 10, 'Expert', '18.00', true, ),
+(5, 6, 'Intermediate', '10.00', true, ),
+(6, 4, 'Expert', '15.00', true, ),
+(9, 2, 'Expert', '20.00', true, ),
+(10, 1, 'Expert', '20.00', true, ),
+(10, 5, 'Intermediate', '15.00', true, ),
+(11, 30, 'Expert', '25.00', true, ),
+(12, 19, 'Intermediate', '18.00', true, ),
+(13, 8, 'Intermediate', '15.00', true, ),
+(15, 31, 'Expert', '12.00', true, ),
+(16, 23, 'Expert', '20.00', true, ),
+(16, 24, 'Expert', '25.00', true, ),
+(20, 23, 'Intermediate', '15.00', true, ),
+(22, 29, 'Expert', '30.00', true, ),
+(24, 32, 'Expert', '15.00', true, ),
+(25, 33, 'Intermediate', '20.00', true, ),
+(22, 28, 'Expert', '15.00', true, ),
+(26, 28, 'Expert', '15.00', true, ),
+(26, 36, 'Advanced', '200.00', true, )
 ON CONFLICT (user_id, skill_id) DO NOTHING;
-
--- Data for USER_SKILL_AVAILABILITY
-INSERT INTO USER_SKILL_AVAILABILITY (user_id, skill_id, day_of_week) VALUES
-(1, 10, 'Saturday'), (1, 10, 'Sunday'),
-(1, 13, 'Monday'), (1, 13, 'Wednesday'),
-(2, 1, 'Tuesday'), (2, 1, 'Thursday'),
-(2, 2, 'Saturday'), (2, 2, 'Sunday'),
-(3, 16, 'Monday'), (3, 16, 'Tuesday'), (3, 16, 'Wednesday'), (3, 16, 'Thursday'), (3, 16, 'Friday'), (3, 16, 'Saturday'), (3, 16, 'Sunday'),
-(3, 17, 'Monday'), (3, 17, 'Tuesday'), (3, 17, 'Wednesday'), (3, 17, 'Thursday'), (3, 17, 'Friday'), (3, 17, 'Saturday'), (3, 17, 'Sunday'),
-(5, 10, 'Friday'),
-(5, 6, 'Saturday'), (5, 6, 'Sunday'),
-(6, 4, 'Monday'),
-(9, 2, 'Saturday'), (9, 2, 'Sunday'),
-(10, 1, 'Wednesday'),
-(10, 5, 'Friday'),
-(11, 30, 'Saturday'), (11, 30, 'Sunday'),
-(12, 19, 'Tuesday'), (12, 19, 'Thursday'),
-(13, 8, 'Monday'),
-(15, 31, 'Monday'), (15, 31, 'Tuesday'), (15, 31, 'Wednesday'), (15, 31, 'Thursday'), (15, 31, 'Friday'), (15, 31, 'Saturday'), (15, 31, 'Sunday'),
-(16, 23, 'Saturday'), (16, 23, 'Sunday'),
-(16, 24, 'Saturday'), (16, 24, 'Sunday'),
-(20, 23, 'Wednesday'),
-(22, 29, 'Saturday'),
-(24, 32, 'Tuesday'), (24, 32, 'Thursday'),
-(25, 33, 'Saturday'), (25, 33, 'Sunday'),
-(22, 28, 'Monday'), (22, 28, 'Tuesday'), (22, 28, 'Wednesday'), (22, 28, 'Thursday'), (22, 28, 'Friday'), (22, 28, 'Saturday'), (22, 28, 'Sunday'),
-(26, 28, 'Monday'), (26, 28, 'Tuesday'), (26, 28, 'Wednesday'), (26, 28, 'Thursday'), (26, 28, 'Friday'), (26, 28, 'Saturday'), (26, 28, 'Sunday'),
-(26, 36, 'Saturday'), (26, 36, 'Sunday')
-ON CONFLICT (user_id, skill_id, day_of_week) DO NOTHING;
 
 -- Data for SERVICE_REQUEST
 INSERT INTO SERVICE_REQUEST (request_id, requester_id, skill_id, description, preferred_date, status) VALUES
@@ -194,7 +167,8 @@ INSERT INTO SERVICE_REQUEST (request_id, requester_id, skill_id, description, pr
 (12, 12, 13, 'React state management is confusing, help!', '2026-04-03T18:30:00.000Z', 'Assigned'),
 (13, 6, 33, 'Building a PC and need someone to double check parts.', '2026-04-06T18:30:00.000Z', 'Pending'),
 (14, 3, 10, 'Need a quick python script for data parsing.', '2026-04-02T18:30:00.000Z', 'Completed'),
-(15, 18, 29, 'Want to learn basic piano chords for a song.', '2026-04-10T18:30:00.000Z', 'Pending')
+(15, 18, 29, 'Want to learn basic piano chords for a song.', '2026-04-10T18:30:00.000Z', 'Pending'),
+(16, 29, 36, 'hi ', '2026-04-03T18:30:00.000Z', 'Pending')
 ON CONFLICT (request_id) DO NOTHING;
 
 -- Data for SERVICE_ASSIGNMENT
@@ -206,7 +180,8 @@ INSERT INTO SERVICE_ASSIGNMENT (assignment_id, request_id, provider_id, assigned
 (5, 8, 13, '2026-03-30T19:49:43.681Z', NULL, 'Accepted'),
 (6, 11, 12, '2026-03-29T19:49:43.681Z', '2026-03-30T19:49:43.681Z', 'Completed'),
 (7, 12, 1, '2026-03-30T19:49:43.681Z', NULL, 'Accepted'),
-(8, 14, 5, '2026-03-26T19:49:43.681Z', '2026-03-29T19:49:43.681Z', 'Completed')
+(8, 14, 5, '2026-03-26T19:49:43.681Z', '2026-03-29T19:49:43.681Z', 'Completed'),
+(9, 16, 26, '2026-04-01T18:55:01.946Z', NULL, 'Accepted')
 ON CONFLICT (assignment_id) DO NOTHING;
 
 -- Data for FEEDBACK

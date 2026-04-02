@@ -12,7 +12,7 @@ export default function AddSkill() {
     const [categories, setCategories] = useState([]);
     const [experienceLevel, setExperienceLevel] = useState('Beginner');
     const [hourlyRate, setHourlyRate] = useState('');
-    const [availability, setAvailability] = useState('');
+    const [availability, setAvailability] = useState([]);
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
@@ -142,13 +142,12 @@ export default function AddSkill() {
                                     <input
                                         type="checkbox"
                                         className="w-5 h-5 rounded border-slate-600 bg-slate-900 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-slate-900"
-                                        checked={Array.isArray(availability) ? availability.includes(day) : false}
+                                        checked={availability.includes(day)}
                                         onChange={(e) => {
-                                            const current = Array.isArray(availability) ? availability : [];
                                             if (e.target.checked) {
-                                                setAvailability([...current, day]);
+                                                setAvailability([...availability, day]);
                                             } else {
-                                                setAvailability(current.filter(d => d !== day));
+                                                setAvailability(availability.filter(d => d !== day));
                                             }
                                         }}
                                     />
@@ -156,7 +155,7 @@ export default function AddSkill() {
                                 </label>
                             ))}
                         </div>
-                        {(!Array.isArray(availability) || availability.length === 0) && (
+                        {availability.length === 0 && (
                             <p className="text-xs text-amber-400 mt-1">Please select at least one day.</p>
                         )}
                     </div>

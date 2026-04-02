@@ -54,9 +54,32 @@ export default function SkillCard({ skill, onAction, onDelete }) {
                     <IndianRupee size={16} className="text-slate-500" />
                     <span>{s.hourlyRate}</span>
                 </div>
-                <div className="flex items-center gap-2 col-span-2">
-                    <Calendar size={16} className="text-slate-500" />
-                    <span className="truncate">Avail: {s.availability}</span>
+                <div className="flex flex-col gap-2 col-span-2">
+                    <div className="flex items-center gap-2">
+                        <Calendar size={16} className="text-slate-500" />
+                        <span className="text-slate-400">Availability:</span>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5 mt-1">
+                        {(() => {
+                            const days = s.availability === "N/A" ? [] : s.availability.split(', ').map(d => d.trim());
+                            if (days.length === 0) return <span className="text-slate-500 italic">No days set</span>;
+                            if (days.length === 7) return <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Everyday</span>;
+                            
+                            // Check for weekends only
+                            const hasSat = days.includes('Saturday');
+                            const hasSun = days.includes('Sunday');
+                            if (days.length === 2 && hasSat && hasSun) return <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/20">Weekends</span>;
+
+                            return days.map(day => {
+                                const dayInitial = day.substring(0, 3);
+                                return (
+                                    <span key={day} className="px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
+                                        {dayInitial}
+                                    </span>
+                                );
+                            });
+                        })()}
+                    </div>
                 </div>
             </div>
 
